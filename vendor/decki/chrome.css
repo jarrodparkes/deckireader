@@ -1,0 +1,372 @@
+/* Source of truth: https://github.com/jarrodparkes/deckibrand
+   Do not edit copies under an app's vendor/decki/. Change this file, then run ./sync.sh.
+   Apps should load tokens.css first, then this file, then their own styles.css. */
+
+* {
+  box-sizing: border-box;
+}
+[hidden] {
+  display: none !important;
+}
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+main {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 24px 20px 60px;
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 18px;
+  padding: 22px 22px 20px;
+  border-radius: var(--radius);
+  background: var(--banner);
+  color: #fff;
+  box-shadow: var(--shadow-raised);
+}
+.header-copy {
+  min-width: 0;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+.brand-logo {
+  flex-shrink: 0;
+  width: clamp(2.6rem, 6vw, 3.4rem);
+  height: clamp(2.6rem, 6vw, 3.4rem);
+  user-select: none;
+  -webkit-user-drag: none;
+}
+h1 {
+  margin: 0 0 6px;
+  font-size: clamp(1.7rem, 4vw, 2.35rem);
+  font-weight: 700;
+  line-height: 1.2;
+}
+.brand h1 {
+  margin: 0;
+}
+h2 {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--heading);
+}
+.subtitle {
+  color: rgba(255, 255, 255, 0.82);
+  margin: 0;
+}
+.header-controls {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 8px;
+}
+.lang-switch,
+.theme-switch {
+  display: inline-flex;
+  flex-shrink: 0;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.12);
+}
+.lang-switch button,
+.theme-switch button {
+  border: 0;
+  border-radius: 0;
+  padding: 7px 12px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 700;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+.lang-switch button:hover,
+.theme-switch button:hover {
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+}
+.lang-switch button[aria-pressed="true"],
+.theme-switch button[aria-pressed="true"] {
+  background: #fff;
+  color: var(--navy);
+}
+.lang-switch button[aria-pressed="true"]:hover,
+.theme-switch button[aria-pressed="true"]:hover {
+  background: #fff;
+  color: var(--navy);
+}
+.lang-switch button:focus-visible,
+.theme-switch button:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.9);
+}
+.theme-switch button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px 9px;
+  letter-spacing: 0;
+}
+.theme-switch svg {
+  display: block;
+  width: 15px;
+  height: 15px;
+}
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 20px 20px;
+  margin: 12px 0;
+  box-shadow: var(--shadow);
+}
+.card-head {
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.card-intro {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+.summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+}
+#count {
+  flex-shrink: 0;
+  padding: 3px 11px;
+  border-radius: 999px;
+  background: var(--highlight-solid);
+  color: var(--on-accent);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+#count:empty {
+  display: none;
+}
+label {
+  display: block;
+  font-weight: 700;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  margin-bottom: 7px;
+}
+.label-with-help {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+}
+input,
+select,
+button,
+textarea {
+  font: inherit;
+}
+input[type="search"],
+input[type="url"],
+input[type="password"],
+input[type="text"],
+input[type="number"],
+select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--card);
+  color: var(--text);
+}
+input[type="search"]:focus,
+input[type="url"]:focus,
+input[type="password"]:focus,
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-ring);
+}
+input[type="file"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+.file-picker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+.file-name {
+  min-width: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+  word-break: break-all;
+}
+button {
+  border: 2px solid var(--accent-solid);
+  border-radius: var(--radius);
+  padding: 9px 20px;
+  cursor: pointer;
+  background: var(--accent-solid);
+  color: var(--on-accent);
+  font-weight: 700;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+button:hover {
+  background: var(--accent-solid-hover);
+  border-color: var(--accent-solid-hover);
+}
+button.secondary {
+  background: transparent;
+  color: var(--text);
+  border-color: var(--border);
+}
+button.secondary:hover {
+  background: var(--tint-hover);
+  border-color: var(--accent);
+  color: var(--accent-text);
+}
+button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+button:disabled:hover {
+  background: var(--accent-solid);
+  border-color: var(--accent-solid);
+}
+button.secondary:disabled:hover {
+  background: transparent;
+  border-color: var(--border);
+  color: var(--text);
+}
+button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--accent-ring);
+}
+button.help-tip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1;
+  cursor: help;
+  flex-shrink: 0;
+  text-transform: none;
+}
+button.help-tip:hover,
+button.help-tip:focus-visible {
+  background: var(--tint-hover);
+  border-color: var(--accent);
+  color: var(--accent-text);
+}
+button.help-tip:focus-visible {
+  box-shadow: 0 0 0 3px var(--accent-ring);
+}
+.help-tooltip {
+  position: absolute;
+  left: 0;
+  top: calc(100% + 6px);
+  z-index: 5;
+  width: min(280px, 70vw);
+  padding: 9px 11px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--card);
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: normal;
+  line-height: 1.4;
+  white-space: pre-line;
+  box-shadow: var(--shadow-raised);
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.12s ease,
+    visibility 0.12s ease;
+}
+.help-tooltip-wide {
+  width: min(420px, 85vw);
+}
+.label-with-help:hover .help-tooltip,
+.label-with-help:focus-within .help-tooltip,
+button.help-tip[aria-expanded="true"] + .help-tooltip {
+  opacity: 1;
+  visibility: visible;
+}
+.help,
+.status {
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+.help {
+  margin: 8px 0 0;
+}
+.status {
+  margin-top: 12px;
+  min-height: 1.4em;
+  font-weight: 500;
+}
+.status.error {
+  color: var(--danger);
+}
+.status.success {
+  color: var(--success);
+}
+.status:empty {
+  display: none;
+}
+@media (max-width: 650px) {
+  .header {
+    flex-wrap: wrap;
+    padding: 18px;
+  }
+}

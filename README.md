@@ -58,6 +58,6 @@ The included `.nojekyll` file keeps GitHub Pages from applying Jekyll processing
 - A modern browser with `fetch`, `File.text`, and `localStorage`
 - For CSV URLs, a host that permits browser CORS requests
 
-## Styling
+## Branding
 
-Styling currently matches [DeckiMasta](https://github.com/jarrodparkes/deckimasta) through duplicated CSS. Sharing a common theme remains a possible future improvement.
+Shared palette, chrome CSS, favicon, and logo live in [deckibrand](https://github.com/jarrodparkes/deckibrand). This app vendors copies under `vendor/decki/` plus root `favicon.ico` / `logo.png`. Do not edit those files here; change deckibrand, run `./sync.sh` from that repo, then commit the copies and bump the CSS `?v=` query in `index.html`. App-only rules stay in `styles.css`.
