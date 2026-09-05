@@ -4,22 +4,22 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0f1d2d">
-  <title>DeckiReader</title>
-  <meta name="description" content="DeckiReader is a static reading log for Japanese books: start and finish dates, pages, relative difficulty, and genre.">
+  <title>DeckíReader</title>
+  <meta name="description" content="DeckíReader is a static reading log for tracking books, dates, pages, difficulty, and genre from a CSV file.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://jarrodparkes.com/deckireader/">
-  <meta property="og:site_name" content="DeckiReader">
-  <meta property="og:title" content="DeckiReader">
-  <meta property="og:description" content="Track the Japanese books you are reading.">
+  <meta property="og:site_name" content="DeckíReader">
+  <meta property="og:title" content="DeckíReader">
+  <meta property="og:description" content="Track the books you are reading from a simple CSV file.">
   <meta property="og:image" content="https://jarrodparkes.com/deckireader/favicon.svg">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="DeckiReader">
-  <meta name="twitter:description" content="Track the Japanese books you are reading.">
+  <meta name="twitter:title" content="DeckíReader">
+  <meta name="twitter:description" content="Track the books you are reading from a simple CSV file.">
   <link rel="icon" href="favicon.ico" type="image/x-icon">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap">
-  <link rel="stylesheet" href="styles.css?v=2026-09-05e">
+  <link rel="stylesheet" href="styles.css?v=2026-09-05h">
   <script>
     (() => {
       let saved = null;
@@ -36,9 +36,9 @@
     <div class="header-copy">
       <div class="brand">
         <img class="brand-logo" src="logo.png" alt="" width="128" height="128" aria-hidden="true" draggable="false">
-        <h1 data-i18n="title">DeckiReader</h1>
+        <h1 data-i18n="title">DeckíReader</h1>
       </div>
-      <p class="subtitle" data-i18n="subtitle">Track the Japanese books you are reading.</p>
+      <p class="subtitle" data-i18n="subtitle">Track the books you are reading.</p>
     </div>
     <div class="header-controls">
       <div class="theme-switch" role="group" aria-label="Appearance">
@@ -88,7 +88,121 @@
     </div>
   </div>
 
-  <section class="card">
+  <section class="card" id="sourceCard">
+    <div class="card-head">
+      <h2 data-i18n="sourceTitle">Setup</h2>
+      <p class="card-intro" data-i18n="sourceIntro">
+        DeckíReader keeps no reading data on the server. Paste CSV, choose a local file, or load a public CSV URL.
+      </p>
+    </div>
+    <div class="source-picker">
+      <label for="sourceType" data-i18n="sourceTypeLabel">Source</label>
+      <select id="sourceType">
+        <option value="paste" data-i18n="sourcePaste">CSV Paste</option>
+        <option value="file" data-i18n="sourceFile">CSV File</option>
+        <option value="url" data-i18n="sourceUrl">CSV URL</option>
+      </select>
+    </div>
+    <details class="csv-format">
+      <summary>
+        <span data-i18n="csvFormatSummary">Use a header row. Tap to learn more about the CSV format. Required columns:</span>
+        <code>id,title,author</code>
+      </summary>
+      <div class="csv-format-body">
+        <h3 data-i18n="csvFormatHeaderTitle">Header row</h3>
+        <p data-i18n="csvFormatHeaderBody">
+          This is the complete header. Columns can be reordered or left out unless they are required,
+          column names are case-sensitive, and an unknown column is rejected so a typo never silently drops data.
+        </p>
+        <pre><code>id,title,titleEn,author,pages,difficulty,genre,startedAt,finishedAt,notes,isbn10,isbn13</code></pre>
+
+        <h3 data-i18n="csvFormatFieldsTitle">Fields</h3>
+        <dl class="csv-fields">
+          <dt><code>id</code> <span class="csv-required" data-i18n="csvFormatRequired">Required</span></dt>
+          <dd data-i18n="csvFieldId">Unique, stable identifier. A short lowercase slug works well, and duplicate values are rejected.</dd>
+          <dt><code>title</code> <span class="csv-required" data-i18n="csvFormatRequired">Required</span></dt>
+          <dd data-i18n="csvFieldTitle">The book title as you want it displayed.</dd>
+          <dt><code>author</code> <span class="csv-required" data-i18n="csvFormatRequired">Required</span></dt>
+          <dd data-i18n="csvFieldAuthor">Author display name.</dd>
+          <dt><code>titleEn</code></dt>
+          <dd data-i18n="csvFieldTitleEn">Optional English or alternate title, shown beneath the title.</dd>
+          <dt><code>pages</code></dt>
+          <dd data-i18n="csvFieldPages">Optional whole number of 1 or more.</dd>
+          <dt><code>difficulty</code></dt>
+          <dd data-i18n="csvFieldDifficulty">Optional personal rating from 1 (easier) to 5 (more challenging).</dd>
+          <dt><code>genre</code></dt>
+          <dd>
+            <span data-i18n="csvFieldGenre">Optional genre. A blank value becomes other, and custom values are kept as typed. Recognized values:</span>
+            <code>literary, mystery, sf, fantasy, essay, nonfiction, biography, business, self-help, psychology, design, manga, other</code>
+          </dd>
+          <dt><code>startedAt</code></dt>
+          <dd data-i18n="csvFieldStartedAt">Optional start date in YYYY-MM-DD format.</dd>
+          <dt><code>finishedAt</code></dt>
+          <dd data-i18n="csvFieldFinishedAt">Optional finish date in YYYY-MM-DD format.</dd>
+          <dt><code>notes</code></dt>
+          <dd data-i18n="csvFieldNotes">Optional freeform notes. Notes are searchable but are not shown in the table.</dd>
+          <dt><code>isbn10</code></dt>
+          <dd data-i18n="csvFieldIsbn10">Optional ISBN-10, stored as text.</dd>
+          <dt><code>isbn13</code></dt>
+          <dd data-i18n="csvFieldIsbn13">Optional ISBN-13, stored as text.</dd>
+        </dl>
+
+        <h3 data-i18n="csvFormatStatusTitle">Status and dates</h3>
+        <ul>
+          <li data-i18n="csvStatusFinished">A row with a finishedAt date is finished.</li>
+          <li data-i18n="csvStatusReading">A row with only a startedAt date is reading.</li>
+          <li data-i18n="csvStatusPlanned">A row with neither date is planned, and it appears only under All-time.</li>
+          <li data-i18n="csvStatusNote">A finish date alone is fine when the start is unknown, but finishedAt cannot come before startedAt.</li>
+        </ul>
+
+        <h3 data-i18n="csvFormatQuotingTitle">Quoting</h3>
+        <ul>
+          <li data-i18n="csvQuoteCommas">Separate fields with commas.</li>
+          <li data-i18n="csvQuoteWrap">Wrap a field in double quotes when it contains a comma, a quote, or a line break.</li>
+          <li data-i18n="csvQuoteEscape">Escape a double quote inside a quoted field by doubling it.</li>
+          <li data-i18n="csvQuoteBlank">Blank optional fields are allowed, but a row may not hold more fields than the header.</li>
+          <li data-i18n="csvQuoteBom">A UTF-8 byte-order mark is accepted.</li>
+        </ul>
+
+        <h3 data-i18n="csvFormatExampleTitle">Example</h3>
+        <pre><code>id,title,titleEn,author,pages,difficulty,genre,startedAt,finishedAt,notes,isbn10,isbn13
+example-book,"A Title, With a Comma",,Example Author,240,3,nonfiction,2026-01-05,2026-02-12,"Good pacing; contains the line ""keep going.""",,</code></pre>
+
+        <h3 data-i18n="csvFormatSamplesTitle">Sample files</h3>
+        <ul>
+          <li>
+            <a href="https://gist.githubusercontent.com/jarrodparkes/7b16c1356f0385016d4b83e09eb53037/raw/cd1c3adb6c7fbf9fa362136f229e0fe4e528366d/english-books-example.csv" target="_blank" rel="noopener"><code>english-books-example.csv</code></a>
+            <span data-i18n="csvSampleEnglish">— English books extracted from review posts on jarrodparkes.com.</span>
+          </li>
+        </ul>
+      </div>
+    </details>
+    <div id="pastePanel" class="source-panel">
+      <label for="csvPaste" data-i18n="csvPasteLabel">Reading list CSV</label>
+      <textarea id="csvPaste" spellcheck="false" data-i18n="csvPastePlaceholder" data-i18n-attr="placeholder" placeholder="id,title,titleEn,author,pages,difficulty,genre,startedAt,finishedAt,notes,isbn10,isbn13"></textarea>
+      <button id="loadPaste" type="button" data-i18n="loadPaste">Load pasted CSV</button>
+    </div>
+    <div id="filePanel" class="source-panel" hidden>
+      <label for="csvFile" data-i18n="csvFileLabel">CSV File</label>
+      <div class="file-picker">
+        <input id="csvFile" type="file" accept=".csv,text/csv,text/plain">
+        <button id="chooseFile" type="button" class="secondary" data-i18n="chooseFile">Choose file</button>
+        <span id="fileName" class="file-name" data-i18n="noFileChosen">No file chosen</span>
+      </div>
+      <button id="loadFile" type="button" data-i18n="loadFile">Load selected file</button>
+    </div>
+    <div id="urlPanel" class="source-panel" hidden>
+      <label for="csvUrl" data-i18n="csvUrlLabel">Public CSV URL</label>
+      <div class="url-loader">
+        <input id="csvUrl" type="url" inputmode="url" placeholder="https://example.com/books.csv">
+        <button id="loadUrl" type="button" data-i18n="loadUrl">Load URL</button>
+      </div>
+      <p class="help" data-i18n="csvUrlHelp">The server must allow cross-origin browser requests (CORS).</p>
+    </div>
+    <div id="sourceStatus" class="status" role="status" aria-live="polite"></div>
+  </section>
+
+  <section class="card" id="totalsCard" hidden>
     <div class="card-head">
       <div class="summary">
         <h2 class="label-with-help">
@@ -103,11 +217,11 @@
             aria-describedby="totalsHelp"
             aria-expanded="false"
           >?</button>
-          <span id="totalsHelp" role="tooltip" class="help-tooltip help-tooltip-wide" data-i18n="totalsHelp">The year filter applies to both this card and the book list. A book counts for a year if it was started, finished, or still in progress that year. All-time includes every book, including planned titles with no dates. Finished and pages read for a year only count books you finished in that year.</span>
+          <span id="totalsHelp" role="tooltip" class="help-tooltip help-tooltip-wide" data-i18n="totalsHelp">The year filter applies to both this card and the book list. A book counts for a year if it was started, finished, or still in progress that year. All-time includes every loaded book, including planned titles with no dates. Finished and pages read for a year only count books you finished in that year.</span>
         </h2>
       </div>
       <p class="card-intro" data-i18n="statsIntro">
-        Counts come from books.js. Choose a year to scope both totals and the list below.
+        Choose a year to scope both totals and the list below.
       </p>
     </div>
     <div class="row">
@@ -138,7 +252,7 @@
     </div>
   </section>
 
-  <section class="card">
+  <section class="card" id="booksCard" hidden>
     <div class="card-head">
       <div class="summary">
         <h2 class="label-with-help">
@@ -153,18 +267,18 @@
             aria-describedby="difficultyHelp"
             aria-expanded="false"
           >?</button>
-          <span id="difficultyHelp" role="tooltip" class="help-tooltip" data-i18n="difficultyHelp">A personal 1–5 scale compared with your other Japanese books, not a publisher or JLPT rating. 1 is easier for you; 5 is denser or more literary.</span>
+          <span id="difficultyHelp" role="tooltip" class="help-tooltip" data-i18n="difficultyHelp">An optional personal 1–5 scale compared with your other books, not a publisher rating. 1 is easier for you; 5 is denser or more challenging.</span>
         </h2>
         <strong id="count"></strong>
       </div>
       <p class="card-intro" data-i18n="booksIntro">
-        Filter the list, then open books.js to add or edit entries. Difficulty is relative to your own shelf (1 easier, 5 denser).
+        Filter the loaded list. Difficulty is relative to your own shelf (1 easier, 5 denser).
       </p>
     </div>
     <div class="row">
       <div class="search-field">
         <label for="search" data-i18n="searchLabel">Search</label>
-        <input id="search" type="search" data-i18n="searchPlaceholder" data-i18n-attr="placeholder" placeholder="Title, author, notes…" autocomplete="off">
+        <input id="search" type="search" data-i18n="searchPlaceholder" data-i18n-attr="placeholder" placeholder="Title, author, genre, notes, ISBN…" autocomplete="off">
       </div>
       <div>
         <label for="statusFilter" data-i18n="statusLabel">Status</label>
@@ -213,8 +327,8 @@
   </section>
 </main>
 
-<script src="translations.js?v=2026-09-05d"></script>
-<script src="books.js?v=2026-09-05a"></script>
-<script src="app.js?v=2026-09-05e"></script>
+<script src="translations.js?v=2026-09-05i"></script>
+<script src="csv.js?v=2026-09-05i"></script>
+<script src="app.js?v=2026-09-05h"></script>
 </body>
 </html>

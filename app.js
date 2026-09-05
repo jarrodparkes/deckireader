@@ -12,6 +12,11 @@
     "fantasy",
     "essay",
     "nonfiction",
+    "biography",
+    "business",
+    "self-help",
+    "psychology",
+    "design",
     "manga",
     "other"
   ];
@@ -22,6 +27,11 @@
     fantasy: "genreFantasy",
     essay: "genreEssay",
     nonfiction: "genreNonfiction",
+    biography: "genreBiography",
+    business: "genreBusiness",
+    "self-help": "genreSelfHelp",
+    psychology: "genrePsychology",
+    design: "genreDesign",
     manga: "genreManga",
     other: "genreOther"
   };
@@ -111,29 +121,7 @@
     return "planned";
   }
 
-  function clampDifficulty(value) {
-    const n = Math.floor(Number(value));
-    if (!Number.isFinite(n)) return 0;
-    return Math.min(5, Math.max(1, n));
-  }
-
-  function parseBooks() {
-    const raw = Array.isArray(window.DECKIREADER_BOOKS) ? window.DECKIREADER_BOOKS : [];
-    return raw.map((book, index) => ({
-      id: book.id || `book-${index}`,
-      title: String(book.title || "").trim(),
-      titleEn: String(book.titleEn || "").trim(),
-      author: String(book.author || "").trim(),
-      pages: Number.isFinite(Number(book.pages)) ? Math.max(0, Math.floor(Number(book.pages))) : null,
-      difficulty: book.difficulty == null || book.difficulty === "" ? 0 : clampDifficulty(book.difficulty),
-      genre: GENRES.includes(book.genre) ? book.genre : "other",
-      startedAt: book.startedAt || null,
-      finishedAt: book.finishedAt || null,
-      notes: String(book.notes || "").trim()
-    })).filter(book => book.title);
-  }
-
-  const books = parseBooks();
+  let books = [];
 
   function formatDate(iso) {
     if (!iso) return "";
@@ -218,7 +206,15 @@
         if (status !== "all" && bookStatus(book) !== status) return false;
         if (genre !== "all" && book.genre !== genre) return false;
         if (!query) return true;
-        const hay = [book.title, book.titleEn, book.author, book.notes].join(" ").toLowerCase();
+        const hay = [
+          book.title,
+          book.titleEn,
+          book.author,
+          book.genre,
+          book.notes,
+          book.isbn10,
+          book.isbn13
+        ].join(" ").toLowerCase();
         return hay.includes(query);
       })
       .slice()
@@ -254,6 +250,11 @@
     return `<span class="cell-empty">—</span>`;
   }
 
+  function genreLabel(genre) {
+    const key = GENRE_KEYS[genre];
+    return key ? t(key) : genre;
+  }
+
   function renderBooks() {
     const list = filteredBooks();
     $("count").textContent = t(list.length === 1 ? "countOne" : "countMany", {
@@ -285,7 +286,7 @@
         <td><span class="chip chip-status">${escapeHtml(t(STATUS_KEYS[status]))}</span></td>
         <td class="book-title">${title}</td>
         <td>${book.author ? escapeHtml(book.author) : emptyCell()}</td>
-        <td>${escapeHtml(t(GENRE_KEYS[book.genre] || "genreOther"))}</td>
+        <td>${escapeHtml(genreLabel(book.genre))}</td>
         <td class="num">${difficulty}</td>
         <td class="num">${book.pages != null ? escapeHtml(String(book.pages)) : emptyCell()}</td>
         <td class="date">${book.startedAt ? escapeHtml(formatDate(book.startedAt)) : emptyCell()}</td>
@@ -322,15 +323,106 @@
     all.setAttribute("data-i18n", "genreAll");
     all.textContent = t("genreAll");
     select.appendChild(all);
-    const used = new Set(books.map(b => b.genre));
-    GENRES.filter(g => used.has(g)).forEach(genre => {
+    const known = GENRES.filter(genre => books.some(book => book.genre === genre));
+    const custom = [...new Set(books.map(book => book.genre))]
+      .filter(genre => !GENRES.includes(genre))
+      .sort((a, b) => a.localeCompare(b));
+    [...known, ...custom].forEach(genre => {
       const option = document.createElement("option");
       option.value = genre;
-      option.setAttribute("data-i18n", GENRE_KEYS[genre]);
-      option.textContent = t(GENRE_KEYS[genre]);
+      if (GENRE_KEYS[genre]) option.setAttribute("data-i18n", GENRE_KEYS[genre]);
+      option.textContent = genreLabel(genre);
       select.appendChild(option);
     });
     select.value = [...select.options].some(o => o.value === current) ? current : "all";
+  }
+
+  function setSourceStatus(message, type = "") {
+    const status = $("sourceStatus");
+    status.textContent = message;
+    status.className = `status ${type}`.trim();
+  }
+
+  function loadCsvText(text, sourceName) {
+    try {
+      const parsed = window.DeckiReaderCsv.parse(text);
+      books = parsed;
+      $("yearFilter").value = "all";
+      $("statusFilter").value = "all";
+      $("genreFilter").value = "all";
+      $("search").value = "";
+      populateYearFilter();
+      populateGenreFilter();
+      $("totalsCard").hidden = false;
+      $("booksCard").hidden = false;
+      renderStats();
+      renderBooks();
+      setSourceStatus(
+        t(parsed.length === 1 ? "loadSuccessOne" : "loadSuccessMany", {
+          count: parsed.length,
+          source: sourceName
+        }),
+        "success"
+      );
+    } catch (error) {
+      setSourceStatus(error && error.message ? error.message : String(error), "error");
+    }
+  }
+
+  function syncSourcePanel() {
+    const selected = $("sourceType").value;
+    ["paste", "file", "url"].forEach(source => {
+      $(`${source}Panel`).hidden = source !== selected;
+    });
+    setSourceStatus("");
+  }
+
+  function updateFileName() {
+    const file = $("csvFile").files && $("csvFile").files[0];
+    $("fileName").textContent = file ? file.name : t("noFileChosen");
+  }
+
+  async function loadSelectedFile() {
+    const file = $("csvFile").files && $("csvFile").files[0];
+    if (!file) {
+      setSourceStatus(t("fileRequired"), "error");
+      return;
+    }
+    try {
+      loadCsvText(await file.text(), file.name);
+    } catch {
+      setSourceStatus(t("fileReadError"), "error");
+    }
+  }
+
+  async function loadCsvUrl() {
+    const value = $("csvUrl").value.trim();
+    if (!value) {
+      setSourceStatus(t("urlRequired"), "error");
+      return;
+    }
+    const button = $("loadUrl");
+    button.disabled = true;
+    setSourceStatus(t("urlLoading"));
+    try {
+      const url = new URL(value, window.location.href);
+      if (!["http:", "https:"].includes(url.protocol)) {
+        throw new Error(t("urlHttpOnly"));
+      }
+      const response = await fetch(url.href);
+      if (!response.ok) throw new Error(t("urlHttpError", { status: response.status }));
+      loadCsvText(await response.text(), url.href);
+    } catch (error) {
+      const message =
+        error instanceof TypeError
+          ? t("urlFetchError")
+          : error && error.message
+            ? error.message
+            : String(error);
+      setSourceStatus(message, "error");
+    } finally {
+      button.disabled = false;
+    }
   }
 
   function applyTranslations() {
@@ -349,6 +441,7 @@
     syncThemeUI();
     renderStats();
     renderBooks();
+    updateFileName();
   }
 
   function bindHelpTip(tipId, tooltipId) {
@@ -386,14 +479,21 @@
     renderStats();
     renderBooks();
   });
+  $("sourceType").addEventListener("change", syncSourcePanel);
+  $("loadPaste").addEventListener("click", () => {
+    loadCsvText($("csvPaste").value, t("sourcePaste"));
+  });
+  $("chooseFile").addEventListener("click", () => $("csvFile").click());
+  $("csvFile").addEventListener("change", updateFileName);
+  $("loadFile").addEventListener("click", loadSelectedFile);
+  $("loadUrl").addEventListener("click", loadCsvUrl);
+  $("csvUrl").addEventListener("keydown", event => {
+    if (event.key === "Enter") loadCsvUrl();
+  });
   bindHelpTip("totalsHelpTip", "totalsHelp");
   bindHelpTip("difficultyHelpTip", "difficultyHelp");
 
-  if (!Array.isArray(window.DECKIREADER_BOOKS)) {
-    $("loadStatus").textContent = t("loadError");
-    $("loadStatus").className = "status error";
-  }
-
   applyTheme();
   applyTranslations();
+  syncSourcePanel();
 })();
