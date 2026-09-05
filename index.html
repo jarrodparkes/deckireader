@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0f1d2d">
+  <title>DeckiReader</title>
+  <meta name="description" content="DeckiReader is a static reading log for Japanese books: start and finish dates, pages, relative difficulty, and genre.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://jarrodparkes.com/deckireader/">
+  <meta property="og:site_name" content="DeckiReader">
+  <meta property="og:title" content="DeckiReader">
+  <meta property="og:description" content="Track the Japanese books you are reading.">
+  <meta property="og:image" content="https://jarrodparkes.com/deckireader/favicon.svg">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="DeckiReader">
+  <meta name="twitter:description" content="Track the Japanese books you are reading.">
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap">
+  <link rel="stylesheet" href="styles.css?v=2026-09-05e">
+  <script>
+    (() => {
+      let saved = null;
+      try { saved = localStorage.getItem("deckireader_theme"); } catch {}
+      const dark = saved === "dark" ||
+        (saved !== "light" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+      document.documentElement.dataset.theme = dark ? "dark" : "light";
+    })();
+  </script>
+</head>
+<body>
+<main>
+  <div class="header">
+    <div class="header-copy">
+      <div class="brand">
+        <img class="brand-logo" src="logo.png" alt="" width="128" height="128" aria-hidden="true" draggable="false">
+        <h1 data-i18n="title">DeckiReader</h1>
+      </div>
+      <p class="subtitle" data-i18n="subtitle">Track the Japanese books you are reading.</p>
+    </div>
+    <div class="header-controls">
+      <div class="theme-switch" role="group" aria-label="Appearance">
+        <button
+          type="button"
+          data-theme-choice="system"
+          aria-pressed="true"
+          data-i18n="themeSystem"
+          data-i18n-attr="aria-label,title"
+          aria-label="Match system appearance"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false">
+            <circle cx="12" cy="12" r="9"></circle>
+            <path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor" stroke="none"></path>
+          </svg>
+        </button>
+        <button
+          type="button"
+          data-theme-choice="light"
+          aria-pressed="false"
+          data-i18n="themeLight"
+          data-i18n-attr="aria-label,title"
+          aria-label="Light appearance"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false">
+            <circle cx="12" cy="12" r="4.2"></circle>
+            <path d="M12 1.5v2.2M12 20.3v2.2M4.2 4.2l1.6 1.6M18.2 18.2l1.6 1.6M1.5 12h2.2M20.3 12h2.2M4.2 19.8l1.6-1.6M18.2 5.8l1.6-1.6"></path>
+          </svg>
+        </button>
+        <button
+          type="button"
+          data-theme-choice="dark"
+          aria-pressed="false"
+          data-i18n="themeDark"
+          data-i18n-attr="aria-label,title"
+          aria-label="Dark appearance"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M20.5 14.2A8.6 8.6 0 0 1 9.8 3.5a8.8 8.8 0 1 0 10.7 10.7z"></path>
+          </svg>
+        </button>
+      </div>
+      <div class="lang-switch" role="group" aria-label="Language">
+        <button type="button" data-lang="en" aria-pressed="true">EN</button>
+        <button type="button" data-lang="ja" aria-pressed="false">日本語</button>
+      </div>
+    </div>
+  </div>
+
+  <section class="card">
+    <div class="card-head">
+      <div class="summary">
+        <h2 class="label-with-help">
+          <span data-i18n="statsTitle">Totals</span>
+          <button
+            type="button"
+            class="help-tip"
+            id="totalsHelpTip"
+            data-i18n="totalsHelpAria"
+            data-i18n-attr="aria-label"
+            aria-label="About totals"
+            aria-describedby="totalsHelp"
+            aria-expanded="false"
+          >?</button>
+          <span id="totalsHelp" role="tooltip" class="help-tooltip help-tooltip-wide" data-i18n="totalsHelp">The year filter applies to both this card and the book list. A book counts for a year if it was started, finished, or still in progress that year. All-time includes every book, including planned titles with no dates. Finished and pages read for a year only count books you finished in that year.</span>
+        </h2>
+      </div>
+      <p class="card-intro" data-i18n="statsIntro">
+        Counts come from books.js. Choose a year to scope both totals and the list below.
+      </p>
+    </div>
+    <div class="row">
+      <div class="year-field">
+        <label for="yearFilter" data-i18n="yearLabel">Year</label>
+        <select id="yearFilter">
+          <option value="all" data-i18n="yearAll">All-time</option>
+        </select>
+      </div>
+    </div>
+    <div class="stat-grid">
+      <div class="stat">
+        <span class="stat-value" id="statReading">0</span>
+        <span class="stat-label" data-i18n="statReading">Reading</span>
+      </div>
+      <div class="stat">
+        <span class="stat-value" id="statFinished">0</span>
+        <span class="stat-label" data-i18n="statFinished">Finished</span>
+      </div>
+      <div class="stat">
+        <span class="stat-value" id="statPlanned">0</span>
+        <span class="stat-label" data-i18n="statPlanned">Planned</span>
+      </div>
+      <div class="stat">
+        <span class="stat-value" id="statPages">0</span>
+        <span class="stat-label" data-i18n="statPages">Pages read</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-head">
+      <div class="summary">
+        <h2 class="label-with-help">
+          <span data-i18n="booksTitle">Books</span>
+          <button
+            type="button"
+            class="help-tip"
+            id="difficultyHelpTip"
+            data-i18n="difficultyHelpAria"
+            data-i18n-attr="aria-label"
+            aria-label="About difficulty"
+            aria-describedby="difficultyHelp"
+            aria-expanded="false"
+          >?</button>
+          <span id="difficultyHelp" role="tooltip" class="help-tooltip" data-i18n="difficultyHelp">A personal 1–5 scale compared with your other Japanese books, not a publisher or JLPT rating. 1 is easier for you; 5 is denser or more literary.</span>
+        </h2>
+        <strong id="count"></strong>
+      </div>
+      <p class="card-intro" data-i18n="booksIntro">
+        Filter the list, then open books.js to add or edit entries. Difficulty is relative to your own shelf (1 easier, 5 denser).
+      </p>
+    </div>
+    <div class="row">
+      <div class="search-field">
+        <label for="search" data-i18n="searchLabel">Search</label>
+        <input id="search" type="search" data-i18n="searchPlaceholder" data-i18n-attr="placeholder" placeholder="Title, author, notes…" autocomplete="off">
+      </div>
+      <div>
+        <label for="statusFilter" data-i18n="statusLabel">Status</label>
+        <select id="statusFilter">
+          <option value="all" data-i18n="statusAll">All statuses</option>
+          <option value="reading" data-i18n="statusReading">Reading</option>
+          <option value="finished" data-i18n="statusFinished">Finished</option>
+          <option value="planned" data-i18n="statusPlanned">Planned</option>
+        </select>
+      </div>
+      <div>
+        <label for="genreFilter" data-i18n="genreLabel">Genre</label>
+        <select id="genreFilter">
+          <option value="all" data-i18n="genreAll">All genres</option>
+        </select>
+      </div>
+      <div>
+        <label for="sort" data-i18n="sortLabel">Sort</label>
+        <select id="sort">
+          <option value="default" data-i18n="sortDefault">Reading first</option>
+          <option value="started" data-i18n="sortStarted">Started (newest)</option>
+          <option value="finished" data-i18n="sortFinished">Finished (newest)</option>
+          <option value="title" data-i18n="sortTitle">Title</option>
+          <option value="difficulty" data-i18n="sortDifficulty">Difficulty</option>
+        </select>
+      </div>
+    </div>
+    <div id="loadStatus" class="status" role="status" aria-live="polite"></div>
+    <div class="table-wrap">
+      <table class="book-table">
+        <thead>
+          <tr>
+            <th data-i18n="colStatus">Status</th>
+            <th data-i18n="colTitle">Title</th>
+            <th data-i18n="colAuthor">Author</th>
+            <th data-i18n="colGenre">Genre</th>
+            <th data-i18n="colDifficulty">Difficulty</th>
+            <th data-i18n="colPages">Pages</th>
+            <th data-i18n="colStarted">Started</th>
+            <th data-i18n="colFinished">Finished</th>
+          </tr>
+        </thead>
+        <tbody id="books"></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<script src="translations.js?v=2026-09-05d"></script>
+<script src="books.js?v=2026-09-05a"></script>
+<script src="app.js?v=2026-09-05e"></script>
+</body>
+</html>
