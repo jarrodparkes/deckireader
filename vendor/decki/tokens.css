@@ -4,11 +4,13 @@
 :root {
   color-scheme: light;
 
-  /* Brand palette: navy grounds, teal acts, aqua softens, orange flags, cream backs. */
+  /* Brand palette: navy grounds, teal acts, aqua softens, orange flags,
+     purple contrasts (triad ~120° from orange and teal), cream backs. */
   --navy: #0f1d2d;
   --teal: #2bb39a;
   --aqua: #7fd4c6;
   --orange: #f58a2a;
+  --purple: #9b4ed0;
   --cream: #fff7ed;
 
   --bg: var(--cream);
@@ -31,6 +33,10 @@
   --highlight: var(--orange);
   /* Count chip uses a deeper orange so white type clears 4.5:1 (light orange is ~2.5:1). */
   --highlight-solid: #ad5c14;
+  /* Second highlight for contrast against orange/teal. Same lightness as --orange,
+     but this hue already clears 4.5:1 with white (~4.8:1), so no darker step. */
+  --highlight-contrast: var(--purple);
+  --highlight-contrast-solid: var(--purple);
   --danger: #c33f43;
   --success: var(--accent-text);
   --banner: linear-gradient(160deg, #23a089 0%, #1a6a60 55%, #1a6a60 100%);
