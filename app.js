@@ -3,6 +3,7 @@
 
   const LANG_KEY = "deckireader_lang";
   const THEME_KEY = "deckireader_theme";
+  const BUNDLED_JAPANESE_CSV = "data/japanese-books.csv";
   const THEMES = ["system", "light", "dark"];
   const SUPPORTED_LANGS = ["en", "ja"];
   const GENRES = [
@@ -343,7 +344,7 @@
     status.className = `status ${type}`.trim();
   }
 
-  function loadCsvText(text, sourceName) {
+  function loadCsvText(text, sourceName, statusKeys = {}) {
     try {
       const parsed = window.DeckiReaderCsv.parse(text);
       books = parsed;
@@ -357,8 +358,10 @@
       $("booksCard").hidden = false;
       renderStats();
       renderBooks();
+      const oneKey = statusKeys.one || "loadSuccessOne";
+      const manyKey = statusKeys.many || "loadSuccessMany";
       setSourceStatus(
-        t(parsed.length === 1 ? "loadSuccessOne" : "loadSuccessMany", {
+        t(parsed.length === 1 ? oneKey : manyKey, {
           count: parsed.length,
           source: sourceName
         }),
@@ -367,6 +370,26 @@
     } catch (error) {
       setSourceStatus(error && error.message ? error.message : String(error), "error");
     }
+  }
+
+  function appAssetUrl(relativePath) {
+    const { origin, pathname } = window.location;
+    const last = pathname.split("/").pop();
+    const dir =
+      pathname.endsWith("/") || !String(last).includes(".")
+        ? pathname.replace(/\/?$/, "/")
+        : pathname.replace(/[^/]+$/, "");
+    return new URL(relativePath, origin + dir).href;
+  }
+
+  async function fetchCsv(href) {
+    const url = new URL(href, window.location.href);
+    if (!["http:", "https:"].includes(url.protocol)) {
+      throw new Error(t("urlHttpOnly"));
+    }
+    const response = await fetch(url.href);
+    if (!response.ok) throw new Error(t("urlHttpError", { status: response.status }));
+    return response.text();
   }
 
   function syncSourcePanel() {
@@ -405,13 +428,7 @@
     button.disabled = true;
     setSourceStatus(t("urlLoading"));
     try {
-      const url = new URL(value, window.location.href);
-      if (!["http:", "https:"].includes(url.protocol)) {
-        throw new Error(t("urlHttpOnly"));
-      }
-      const response = await fetch(url.href);
-      if (!response.ok) throw new Error(t("urlHttpError", { status: response.status }));
-      loadCsvText(await response.text(), url.href);
+      loadCsvText(await fetchCsv(value), new URL(value, window.location.href).href);
     } catch (error) {
       const message =
         error instanceof TypeError
@@ -492,6 +509,48 @@
   });
   bindHelpTip("totalsHelpTip", "totalsHelp");
   bindHelpTip("difficultyHelpTip", "difficultyHelp");
+
+  (function bindLogoEasterEgg() {
+    const logo = document.querySelector(".brand-logo");
+    if (!logo) return;
+    const CLICKS_TO_UNLOCK = 5;
+    const CLICK_GAP_MS = 1500;
+    let clicks = 0;
+    let gapTimer = 0;
+    let loading = false;
+
+    logo.addEventListener("click", async () => {
+      window.clearTimeout(gapTimer);
+      clicks += 1;
+      if (clicks < CLICKS_TO_UNLOCK) {
+        gapTimer = window.setTimeout(() => {
+          clicks = 0;
+        }, CLICK_GAP_MS);
+        return;
+      }
+      clicks = 0;
+      if (loading) return;
+      loading = true;
+      setSourceStatus(t("easterEggLoading"));
+      try {
+        const href = appAssetUrl(BUNDLED_JAPANESE_CSV);
+        loadCsvText(await fetchCsv(href), BUNDLED_JAPANESE_CSV, {
+          one: "easterEggSuccessOne",
+          many: "easterEggSuccessMany"
+        });
+      } catch (error) {
+        const message =
+          error instanceof TypeError
+            ? t("easterEggError")
+            : error && error.message
+              ? error.message
+              : t("easterEggError");
+        setSourceStatus(message, "error");
+      } finally {
+        loading = false;
+      }
+    });
+  })();
 
   applyTheme();
   applyTranslations();
