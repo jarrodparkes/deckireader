@@ -266,7 +266,66 @@
     return key ? t(key) : genre;
   }
 
+  const NOTES_TIP_ID = "bookNotes";
+  const NOTES_TIP_GAP = 14;
+  const NOTES_TIP_MARGIN = 12;
+  const notesTip = document.createElement("div");
+  notesTip.id = NOTES_TIP_ID;
+  notesTip.className = "notes-tip";
+  notesTip.setAttribute("role", "tooltip");
+  notesTip.hidden = true;
+  document.body.appendChild(notesTip);
+  let notesRow = null;
+
+  function clamp(value, min, max) {
+    return Math.min(Math.max(value, min), Math.max(min, max));
+  }
+
+  function positionNotes(point) {
+    if (!notesRow) return;
+    const row = notesRow.getBoundingClientRect();
+    const tip = notesTip.getBoundingClientRect();
+    const anchorX = point ? point.x : row.left;
+    const anchorY = point ? point.y : row.bottom - NOTES_TIP_GAP;
+    const left = clamp(
+      anchorX + NOTES_TIP_GAP,
+      NOTES_TIP_MARGIN,
+      window.innerWidth - tip.width - NOTES_TIP_MARGIN
+    );
+    const below = anchorY + NOTES_TIP_GAP;
+    const top =
+      below + tip.height > window.innerHeight - NOTES_TIP_MARGIN
+        ? Math.max(NOTES_TIP_MARGIN, anchorY - NOTES_TIP_GAP - tip.height)
+        : below;
+    notesTip.style.left = `${left}px`;
+    notesTip.style.top = `${top}px`;
+  }
+
+  function showNotes(row, point) {
+    const notes = row.dataset.notes;
+    if (!notes) return;
+    if (notesRow !== row) {
+      notesTip.innerHTML = `<span class="notes-tip-label">${escapeHtml(
+        t("notesLabel")
+      )}</span>${escapeHtml(notes)}`;
+      notesRow = row;
+    }
+    notesTip.hidden = false;
+    positionNotes(point);
+  }
+
+  function hideNotes() {
+    notesRow = null;
+    notesTip.hidden = true;
+  }
+
+  function notesRowFrom(target) {
+    const row = target instanceof Element ? target.closest("tr[data-notes]") : null;
+    return row && row.parentElement === $("books") ? row : null;
+  }
+
   function renderBooks() {
+    hideNotes();
     const list = filteredBooks();
     $("count").textContent = t(list.length === 1 ? "countOne" : "countMany", {
       count: list.length
@@ -287,6 +346,11 @@
       const status = bookStatus(book);
       const row = document.createElement("tr");
       row.dataset.status = status;
+      if (book.notes) {
+        row.dataset.notes = book.notes;
+        row.tabIndex = 0;
+        row.setAttribute("aria-describedby", NOTES_TIP_ID);
+      }
       const title = book.titleEn
         ? `${escapeHtml(book.title)}<div class="book-title-en">${escapeHtml(book.titleEn)}</div>`
         : escapeHtml(book.title);
@@ -519,6 +583,25 @@
   });
   bindHelpTip("totalsHelpTip", "totalsHelp");
   bindHelpTip("difficultyHelpTip", "difficultyHelp");
+
+  $("books").addEventListener("mousemove", event => {
+    const row = notesRowFrom(event.target);
+    if (row) showNotes(row, { x: event.clientX, y: event.clientY });
+    else hideNotes();
+  });
+  $("books").addEventListener("mouseleave", hideNotes);
+  $("books").addEventListener("focusin", event => {
+    const row = notesRowFrom(event.target);
+    if (row) showNotes(row);
+  });
+  $("books").addEventListener("focusout", event => {
+    if (!notesRowFrom(event.relatedTarget)) hideNotes();
+  });
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape") hideNotes();
+  });
+  window.addEventListener("scroll", hideNotes, true);
+  window.addEventListener("resize", hideNotes);
 
   (function bindLogoEasterEgg() {
     const logo = document.querySelector(".brand-logo");

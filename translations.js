@@ -36,7 +36,7 @@ window.DeckiReaderStrings = {
     csvFieldStartedAt: "Optional start date in YYYY-MM-DD format.",
     csvFieldFinishedAt: "Optional finish date in YYYY-MM-DD format.",
     csvFieldNotes:
-      "Optional freeform notes. Notes are searchable but are not shown in the table.",
+      "Optional freeform notes. Notes are searchable and appear in a tooltip when you hover or focus a row.",
     csvFieldIsbn10: "Optional ISBN-10, stored as text.",
     csvFieldIsbn13: "Optional ISBN-13, stored as text.",
     csvFormatStatusTitle: "Status and dates",
@@ -152,6 +152,7 @@ window.DeckiReaderStrings = {
     difficultyHelpAria: "About difficulty",
     difficultyHelp:
       "An optional personal 1–5 scale compared with your other books, not a publisher rating. 1 is easier for you; 5 is denser or more challenging.",
+    notesLabel: "Notes",
   },
   ja: {
     title: "デッキリーダー",
@@ -188,7 +189,7 @@ window.DeckiReaderStrings = {
     csvFieldStartedAt: "任意の開始日。YYYY-MM-DD 形式。",
     csvFieldFinishedAt: "任意の読了日。YYYY-MM-DD 形式。",
     csvFieldNotes:
-      "任意の自由記述メモ。検索の対象になりますが、表には表示されません。",
+      "任意の自由記述メモ。検索の対象になり、行にカーソルを合わせるかフォーカスするとツールチップに表示されます。",
     csvFieldIsbn10: "任意のISBN-10。文字列として保存されます。",
     csvFieldIsbn13: "任意のISBN-13。文字列として保存されます。",
     csvFormatStatusTitle: "状態と日付",
@@ -304,5 +305,6 @@ window.DeckiReaderStrings = {
     difficultyHelpAria: "難易度について",
     difficultyHelp:
       "出版社の評価ではなく、自分の本同士で比べる任意の1〜5です。1は自分にとって易しく、5は密度が高い、またはより難しい本です。",
+    notesLabel: "メモ",
   },
 };
