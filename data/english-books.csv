@@ -1,25 +1,25 @@
 id,title,titleEn,author,pages,difficulty,genre,startedAt,finishedAt,notes,isbn10,isbn13
-measure-what-matters,Measure What Matters,,John Doerr,320,3,business,,2018-08-04,,0525536221,978-0525536222
-the-effective-executive,The Effective Executive,,Peter Drucker,208,4,business,,2018-08-12,,0060833459,978-0060833459
-sprint-how-to-solve-big-problems,Sprint: How to Solve Big Problems and Test New Ideas in Just Five Days,,Jake Knapp,288,3,design,,2018-11-20,,150112174X,978-1501121746
-the-lean-startup,The Lean Startup,,Eric Ries,336,3,business,,2018-11-27,,0307887898,978-0307887894
-dont-make-me-think,Don't Make Me Think,,Steve Krug,216,2,design,,2018-12-02,,0321965515,978-0321965516
-how-google-works,How Google Works,,Eric Schmidt and Jonathan Rosenburg,304,4,business,,2019-01-03,,1455582344,978-1455582341
-high-growth-handbook,High Growth Handbook,,Elad Gil,344,4,business,,2019-01-15,,1732265100,978-1732265103
-who-a-hiring-method,Who: The A Method of Hiring,,Geoff Smart and Randy Street,208,2,business,,2019-01-25,,0345504194,978-0345504197
-atomic-habits,Atomic Habits,,James Clear,320,3,self-help,,2019-01-28,,0735211299,978-0735211292
-it-doesnt-have-to-be-crazy-at-work,It Doesn’t Have to Be Crazy at Work,,Jason Fried and David Hansson,240,2,business,,2019-02-08,,0062874780,978-0062874788
-powerful-culture-of-freedom-and-responsibility,Powerful: Building a Culture of Freedom and Responsibility,,Patty McCord,228,3,business,,2019-02-10,,1939714095,978-1939714091
-zero-to-one,Zero to One,,Peter Thiel,224,3,business,,2019-02-14,,0804139296,978-0804139298
-remote-office-not-required,Remote: Office Not Required,,Jason Fried and David Hansson,256,2,business,,2019-02-15,,0804137501,978-0804137508
-the-everything-store,The Everything Store,,Brad Stone,384,4,biography,,2019-02-23,,0316219266,978-0316219266
-the-power-of-habit,The Power of Habit: Why We Do What We Do in Life and Business,,Charles Duhigg,400,3,self-help,,2019-09-21,,1400069289,978-1400069286
-loonshots,Loonshots,,Safi Bahcall,368,4,business,,2019-10-29,,1250185963,978-1250185969
-valve-new-employee-handbook,Valve: New Employee Handbook,,Valve,56,1,business,,2019-10-30,"Internal Valve PDF; no commercial ISBN.",,
-never-lose-a-customer-again,Never Lose a Customer Again,,Joey Coleman,368,3,business,,2020-02-05,,0735220034,978-0735220034
-thinking-in-bets,Thinking in Bets,,Annie Duke,288,4,psychology,,2020-02-06,,0735216355,978-0735216358
-insanely-simple,Insanely Simple,,Ken Segall,240,2,business,,2020-03-04,,1591844835,978-1591844839
-range,Range: Why Generalists Triumph in a Specialized World,,David Epstein,352,4,nonfiction,,2020-03-17,,0735214484,978-0735214484
-six-thinking-hats,Six Thinking Hats,,Edward De Bono,192,2,psychology,,2020-05-15,,0316178314,978-0316178310
-designing-your-work-life,Designing Your Work Life,,Bill Burnett and Dave Evans,304,3,self-help,,2020-11-01,,0525655247,978-0525655244
-shape-up,Shape Up: Stop Running in Circles and Ship Work that Matters,,Ryan Singer,176,2,business,,2020-11-16,"Self-published by Basecamp; no commercial ISBN.",,
+en-2026-09-23-0001,Measure What Matters,,John Doerr,320,3,business,,2018-08-04,,0525536221,978-0525536222
+en-2026-09-23-0002,The Effective Executive,,Peter Drucker,208,4,business,,2018-08-12,,0060833459,978-0060833459
+en-2026-09-23-0003,Sprint: How to Solve Big Problems and Test New Ideas in Just Five Days,,Jake Knapp,288,3,design,,2018-11-20,,150112174X,978-1501121746
+en-2026-09-23-0004,The Lean Startup,,Eric Ries,336,3,business,,2018-11-27,,0307887898,978-0307887894
+en-2026-09-23-0005,Don't Make Me Think,,Steve Krug,216,2,design,,2018-12-02,,0321965515,978-0321965516
+en-2026-09-23-0006,How Google Works,,Eric Schmidt and Jonathan Rosenburg,304,4,business,,2019-01-03,,1455582344,978-1455582341
+en-2026-09-23-0007,High Growth Handbook,,Elad Gil,344,4,business,,2019-01-15,,1732265100,978-1732265103
+en-2026-09-23-0008,Who: The A Method of Hiring,,Geoff Smart and Randy Street,208,2,business,,2019-01-25,,0345504194,978-0345504197
+en-2026-09-23-0009,Atomic Habits,,James Clear,320,3,self-help,,2019-01-28,,0735211299,978-0735211292
+en-2026-09-23-0010,It Doesn’t Have to Be Crazy at Work,,Jason Fried and David Hansson,240,2,business,,2019-02-08,,0062874780,978-0062874788
+en-2026-09-23-0011,Powerful: Building a Culture of Freedom and Responsibility,,Patty McCord,228,3,business,,2019-02-10,,1939714095,978-1939714091
+en-2026-09-23-0012,Zero to One,,Peter Thiel,224,3,business,,2019-02-14,,0804139296,978-0804139298
+en-2026-09-23-0013,Remote: Office Not Required,,Jason Fried and David Hansson,256,2,business,,2019-02-15,,0804137501,978-0804137508
+en-2026-09-23-0014,The Everything Store,,Brad Stone,384,4,biography,,2019-02-23,,0316219266,978-0316219266
+en-2026-09-23-0015,The Power of Habit: Why We Do What We Do in Life and Business,,Charles Duhigg,400,3,self-help,,2019-09-21,,1400069289,978-1400069286
+en-2026-09-23-0016,Loonshots,,Safi Bahcall,368,4,business,,2019-10-29,,1250185963,978-1250185969
+en-2026-09-23-0017,Valve: New Employee Handbook,,Valve,56,1,business,,2019-10-30,"Internal Valve PDF; no commercial ISBN.",,
+en-2026-09-23-0018,Never Lose a Customer Again,,Joey Coleman,368,3,business,,2020-02-05,,0735220034,978-0735220034
+en-2026-09-23-0019,Thinking in Bets,,Annie Duke,288,4,psychology,,2020-02-06,,0735216355,978-0735216358
+en-2026-09-23-0020,Insanely Simple,,Ken Segall,240,2,business,,2020-03-04,,1591844835,978-1591844839
+en-2026-09-23-0021,Range: Why Generalists Triumph in a Specialized World,,David Epstein,352,4,nonfiction,,2020-03-17,,0735214484,978-0735214484
+en-2026-09-23-0022,Six Thinking Hats,,Edward De Bono,192,2,psychology,,2020-05-15,,0316178314,978-0316178310
+en-2026-09-23-0023,Designing Your Work Life,,Bill Burnett and Dave Evans,304,3,self-help,,2020-11-01,,0525655247,978-0525655244
+en-2026-09-23-0024,Shape Up: Stop Running in Circles and Ship Work that Matters,,Ryan Singer,176,2,business,,2020-11-16,"Self-published by Basecamp; no commercial ISBN.",,
